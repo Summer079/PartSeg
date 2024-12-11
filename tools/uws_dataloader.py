@@ -33,17 +33,20 @@ class UWFSDataLoader(torch.utils.data.Dataset):
 
         if not self.channel_values:
             self.label_dictionary = {
-                0:  {'name': 'unlabeled',   'train_id': 255, 'color': (0,   0,   0)},
-                1:  {'name': 'head',        'train_id': 0,   'color': (128, 64,  128)},
-                2:  {'name': 'body',   'train_id': 1,   'color': (244, 35,  232)},
-                3:  {'name': 'fin',     'train_id': 2,   'color': (70,  70,  70)},
-                4:  {'name': 'tail',        'train_id': 3,   'color': (102, 102, 156)},
+                0:  {'name': 'unlabeled',   'train_id': 0,   'color': (0,   0,   0)},
+                1:  {'name': 'head',        'train_id': 1,   'color': (128, 64,  128)},
+                2:  {'name': 'body',        'train_id': 2,   'color': (244, 35,  232)},
+                3:  {'name': 'fin',         'train_id': 3,   'color': (70,  70,  70)},
+                4:  {'name': 'tail',        'train_id': 4,   'color': (102, 102, 156)},
+                
             }
         else:
             self.label_dictionary = self.channel_values
 
         self.length = len(self.images)
 
+        print("the class labeling is: ", self.label_dictionary)
+                        
         if self.length == 0:
             raise FileNotFoundError('No dataset files found')
 
