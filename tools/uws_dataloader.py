@@ -33,7 +33,7 @@ class UWFSDataLoader(torch.utils.data.Dataset):
 
         if not self.channel_values:
             self.label_dictionary = {
-                0:  {'name': 'unlabeled',   'train_id': 0,   'color': (0,   0,   0)},
+                0:  {'name': 'background',   'train_id': 0,   'color': (100,   50,   50)},
                 1:  {'name': 'head',        'train_id': 1,   'color': (128, 64,  128)},
                 2:  {'name': 'body',        'train_id': 2,   'color': (244, 35,  232)},
                 3:  {'name': 'fin',         'train_id': 3,   'color': (70,  70,  70)},
