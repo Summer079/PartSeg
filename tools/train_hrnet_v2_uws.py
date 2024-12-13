@@ -23,7 +23,7 @@ from core.function import train, validate
 from utils.hrnet_v2_utils.utils import create_logger, FullModel
 from utils.hrnet_utils.normalization_utils import get_imagenet_mean_std
 
-from uws_dataloader import UWFSDataLoader
+from partseg_dataloader import PartSegDataLoader
 
 from utils.hrnet_utils import transform
 from tqdm import tqdm
@@ -124,13 +124,19 @@ def main():
                 '*.png'
             )
         )
-        masks_files = \
-            [os.path.join(config.DATASET.ROOT, train_dir, 'labels', os.path.basename(m_i)) for m_i in images_files]
+        masks_files = [os.path.join(config.DATASET.ROOT, 
+                                    train_dir, 
+                                    'labels', 
+                                    os.path.basename(m_i)) for m_i in images_files]
 
         images = []
         masks = []
 
         for i_i_fl, img_fl in enumerate(tqdm(images_files)):
+            
+            #if i_i_fl <= 28:
+            #    print(f"File#{i_i_fl}. {img_fl}")
+                
             images.append(np.array(
                 Image.open(img_fl)
             ))
@@ -141,6 +147,8 @@ def main():
         dataset_len = len(images)
         logger.info(f'Total train image files: {dataset_len}')
         np.random.seed(0)
+                
+        
         rand_n = list(np.random.randint(low=0, high=dataset_len, size=dataset_len//2))
         for i in rand_n:
             im = images[i]
@@ -196,6 +204,7 @@ def main():
             target[shift:, :] = target[:-shift, :]
             images.append(im)
             masks.append(target)
+
         
         images_train = images
         masks_train = masks
@@ -209,7 +218,10 @@ def main():
             )
         )
         masks_files = \
-            [os.path.join(config.DATASET.ROOT, val_dir, 'labels', os.path.basename(m_i)) for m_i in images_files]
+            [os.path.join(config.DATASET.ROOT, 
+                          val_dir, 
+                          'labels', 
+                          os.path.basename(m_i)) for m_i in images_files]
 
         images_test = []
         masks_test = []
@@ -225,14 +237,14 @@ def main():
         dataset_len = len(images_test)
         logger.info(f'Total val mat files: {dataset_len}')
         
-        train_dataset = UWFSDataLoader(
+        train_dataset = PartSegDataLoader(
             output_image_height=config.TRAIN.IMAGE_SIZE[0],
             images=images_train,
             masks=masks_train,
             normalizer=transform.Compose(train_transform_list),
             channel_values=None
         )
-        val_dataset = UWFSDataLoader(
+        val_dataset = PartSegDataLoader(
             output_image_height=config.TRAIN.IMAGE_SIZE[0],
             images=images_test,
             masks=masks_test,
